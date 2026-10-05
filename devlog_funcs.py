@@ -12,15 +12,19 @@ def clear_screen():
 def initialize_database():
     conn = sqlite3.connect('devlog.db')
     cursor = conn.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS entries (title TEXT, content TEXT, timestamp DATETIME)''')
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    content TEXT, 
+    timestamp DATETIME)''')
     conn.commit()
     conn.close()
 
-def add_entry(title, content):
+def add_entry(content):
     now = datetime.now().strftime("%m/%d/%Y")
     conn = sqlite3.connect('devlog.db')
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO entries (title, content, timestamp) VALUES (?, ?, ?)', (title, content, now))
+    cursor.execute('INSERT INTO entries ( content, timestamp) VALUES (?,?)', (content, now))
     conn.commit()
     conn.close()
 
@@ -34,10 +38,10 @@ def list_entries():
         print()
     conn.close()
 
-def remove_entry(title):
+def remove_entry(id):
     conn = sqlite3.connect('devlog.db')
     cursor = conn.cursor()
-    cursor.execute('DELETE FROM entries WHERE title=?', (title,))
+    cursor.execute('DELETE FROM entries WHERE id = ?', (id,))
     conn.commit()
     conn.close()
 
